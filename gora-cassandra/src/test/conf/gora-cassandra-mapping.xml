@@ -50,46 +50,44 @@
 -->
 
 <gora-otd>
-  <keyspace name="Employee" host="localhost:9160" placement_strategy="org.apache.cassandra.locator.SimpleStrategy"
-      replication_factor="1" cluster="Gora Cassandra Test Cluster">
-    <family name="p" gc_grace_seconds="5"/>
-     <family name="sc" type="super" />
-  </keyspace>
+    <keyspace name="Employee" host="localhost:9042" placement_strategy="org.apache.cassandra.locator.SimpleStrategy"
+              replication_factor="1" cluster="Gora Cassandra Test Cluster">
+        <table name="p" gc_grace_seconds="5"/>
+        <table name="q"/>
+    </keyspace>
 
-  <keyspace name="WebPage" host="localhost:9160" placement_strategy="org.apache.cassandra.locator.SimpleStrategy"
-      replication_factor="1" cluster="Gora Cassandra Test Cluster">
-    <family name="p" gc_grace_seconds="5"/>
-    <family name="sc" type="super"/>
-  </keyspace>
+    <keyspace name="WebPage" host="localhost:9042" placement_strategy="org.apache.cassandra.locator.SimpleStrategy"
+              replication_factor="1" cluster="Gora Cassandra Test Cluster">
+        <table name="p" gc_grace_seconds="5"/>
+        <table name="sc"/>
+    </keyspace>
 
-  <keyspace name="TokenDatum" host="localhost:9160" placement_strategy="org.apache.cassandra.locator.SimpleStrategy"
-      replication_factor="1" cluster="Gora Cassandra Test Cluster">
-    <family name="p" gc_grace_seconds="5"/>
-    <family name="sc" type="super"/>
-  </keyspace>
+    <keyspace name="TokenDatum" host="localhost:9042" placement_strategy="org.apache.cassandra.locator.SimpleStrategy"
+              replication_factor="1" cluster="Gora Cassandra Test Cluster">
+        <table name="p" gc_grace_seconds="5"/>
+        <table name="sc" type="super"/>
+    </keyspace>
 
-  <class name="org.apache.gora.examples.generated.Employee" keyClass="java.lang.String" keyspace="Employee">
-    <field name="name"  family="p" qualifier="info:nm" ttl="10"/>
-    <field name="dateOfBirth"  family="p" qualifier="info:db" ttl="10"/>
-    <field name="ssn"  family="p" qualifier="info:sn" ttl="10"/>
-    <field name="salary"  family="p" qualifier="info:sl" ttl="10"/>
-    <field name="boss" family="p" qualifier="info:bs" ttl="10"/>
-    <field name="webpage" family="p" qualifier="info:wp" ttl="10"/>
-  </class>
+    <class name="org.apache.gora.examples.generated.Employee" keyClass="java.lang.String" keyspace="Employee">
+        <field name="name" table="p" column="info:nm" key="true" ttl="10"/>
+        <field name="dateOfBirth" table="p" column="info:db" ttl="10"/>
+        <field name="ssn" table="p" column="info:sn" ttl="10"/>
+        <field name="salary" table="p" column="info:sl" ttl="10"/>
+        <field name="boss" table="p" column="info:bs" ttl="10"/>
+        <field name="webpage" table="q" column="info:wp" ttl="10"/>
+    </class>
 
-  <class name="org.apache.gora.examples.generated.WebPage" keyClass="java.lang.String" keyspace="WebPage">
-    <field name="url" family="p" qualifier="c:u" ttl="10"/>
-    <field name="content" family="p" qualifier="p:cnt:c" ttl="10"/>
-    <field name="parsedContent" family="sc" qualifier="p:parsedContent" ttl="10"/>
-    <field name="outlinks" family="sc" qualifier="p:outlinks" ttl="10"/>
-    <field name="headers" family="sc" qualifier="p:headers" ttl="10"/>
-    <field name="metadata" family="p" qualifier="c:mt" ttl="10"/>
-    <field name="byteData" family="sc" qualifier="p:byteData" ttl="10"/>
-    <field name="stringData" family="sc" qualifier="p:stringData" ttl="10"/>
-  </class>
+    <class name="org.apache.gora.examples.generated.WebPage" keyClass="java.lang.String" keyspace="WebPage">
+        <field name="url" table="p" column="c:u" ttl="10"/>
+        <field name="content" table="p" column="p:cnt:c" ttl="10"/>
+        <field name="parsedContent" table="sc" column="p:parsedContent" ttl="10"/>
+        <field name="outlinks" table="sc" column="p:outlinks" ttl="10"/>
+        <field name="headers" table="sc" column="p:headers" ttl="10"/>
+        <field name="metadata" table="p" column="c:mt" ttl="10"/>
+    </class>
 
-  <class name="org.apache.gora.examples.generated.TokenDatum" keyClass="java.lang.String" keyspace="TokenDatum">
-    <field name="count"  family="p" qualifier="common:count" ttl="10"/>
-  </class>
+    <class name="org.apache.gora.examples.generated.TokenDatum" keyClass="java.lang.String" keyspace="TokenDatum">
+        <field name="count" table="p" column="common:count" ttl="10"/>
+    </class>
 
 </gora-otd>

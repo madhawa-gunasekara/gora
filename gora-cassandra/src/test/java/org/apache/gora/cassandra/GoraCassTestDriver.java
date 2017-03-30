@@ -23,17 +23,14 @@
 
 package org.apache.gora.cassandra;
 
-import org.apache.gora.GoraTestDriver;
-import org.apache.gora.cassandra.store.CassandraStore;
-
-import java.io.File;
-
 import org.apache.cassandra.io.util.FileUtils;
 import org.apache.cassandra.service.CassandraDaemon;
-
-// Logging imports
+import org.apache.gora.GoraTestDriver;
+import org.apache.gora.cassandra.store.CassandraStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
 
 /**
  * Helper class for third party tests using gora-cassandra backend. 
@@ -45,9 +42,9 @@ import org.slf4j.LoggerFactory;
  * @author lewismc
  */
 
-public class GoraCassandraTestDriver extends GoraTestDriver {
-  private static Logger log = LoggerFactory.getLogger(GoraCassandraTestDriver.class);
-  
+public class GoraCassTestDriver extends GoraTestDriver {
+  private static Logger log = LoggerFactory.getLogger(GoraCassTestDriver.class);
+
   private String baseDirectory = "target/test";
 
   private CassandraDaemon cassandraDaemon;
@@ -61,7 +58,7 @@ public class GoraCassandraTestDriver extends GoraTestDriver {
     return baseDirectory;
   }
 
-  public GoraCassandraTestDriver() {
+  public GoraCassTestDriver() {
     super(CassandraStore.class);
   }
 	
@@ -72,7 +69,8 @@ public class GoraCassandraTestDriver extends GoraTestDriver {
    * 	if an error occurs
    */
   @Override
-  public void setUpClass(){
+  public void setUpClass() throws Exception {
+    super.setUpClass();
     log.info("Starting embedded Cassandra Server...");
     try {
       cleanupDirectoriesFailover();
@@ -83,7 +81,6 @@ public class GoraCassandraTestDriver extends GoraTestDriver {
       cassandraDaemon = new CassandraDaemon();
       cassandraDaemon.init(null);
       cassandraThread = new Thread(new Runnable() {
-	
         public void run() {
           try {
             cassandraDaemon.start();
@@ -92,12 +89,11 @@ public class GoraCassandraTestDriver extends GoraTestDriver {
           }
         }
       });
-	
+
       cassandraThread.setDaemon(true);
       cassandraThread.start();
     } catch (Exception e) {
       log.error("Embedded casandra server start failed!", e);
-
       // cleanup
       tearDownClass();
     }
@@ -110,7 +106,8 @@ public class GoraCassandraTestDriver extends GoraTestDriver {
    * 	if an error occurs
    */
   @Override
-  public void tearDownClass(){
+  public void tearDownClass() throws Exception {
+    super.tearDownClass();
     log.info("Shutting down Embedded Cassandra server...");
     if (cassandraThread != null) {
       cassandraDaemon.stop();
